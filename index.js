@@ -46,6 +46,16 @@ async function run() {
             res.send(result)
 
         })
+
+        // post item
+
+        app.post("/items", async (req, res) => {
+            const newitem = req.body
+            const result = await productsCollection.insertOne(newitem)
+            res.send(result)
+        })
+
+
         // review-------------------------------------------------------------------------------------------------------------
         // Get All reviews
         app.get("/reviews", async (req, res) => {
