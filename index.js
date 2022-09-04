@@ -24,8 +24,10 @@ async function run() {
 
         const productsCollection = client.db("MadeEasy").collection("items")
         const reviewsCollection = client.db("MadeEasy").collection("reviews")
+        const orderCollection = client.db("MadeEasy").collection("orders")
+        const userCollection = client.db("MadeEasy").collection("users")
 
-
+        // item---------------------------------------------------------------------------------------------------------------------------
         // Get All Items
         app.get("/items", async (req, res) => {
             const query = {}
@@ -35,7 +37,16 @@ async function run() {
 
         })
 
+        // Get Single Items
+        app.get("/items/:id", async (req, res) => {
 
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await productsCollection.findOne(query)
+            res.send(result)
+
+        })
+        // review-------------------------------------------------------------------------------------------------------------
         // Get All reviews
         app.get("/reviews", async (req, res) => {
             const query = {}
@@ -45,7 +56,63 @@ async function run() {
 
         })
 
+        app.post("/reviews", async (req, res) => {
+            const newUser = req.body
+            const result = await reviewsCollection.insertOne(newUser)
+            res.send(result)
+        })
 
+
+
+        // POst a single all orders order -----------------------------------------------------------------------
+        app.post("/orders", async (req, res) => {
+            const newOrder = req.body
+            const result = await orderCollection.insertOne(newOrder)
+            res.send(result)
+        })
+
+        // Get All order
+        app.get("/orders", async (req, res) => {
+            const query = {}
+            const cursor = orderCollection.find(query)
+            const result = await cursor.toArray()
+            res.send(result)
+
+        })
+
+        // -------------------------------------------------------------------------------------------------------------------
+        // My order
+        app.get("/myitems", async (req, res) => {
+            const email = req.query.email
+            // console.log(email)
+            const query = { email: email }
+            const result = await orderCollection.find(query).toArray()
+            res.send(result)
+
+        })
+
+        app.delete("/myitems/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query)
+            res.send(result)
+        })
+
+
+        // user---------------------------------------------------------------------------------------------------------------------------
+
+        app.put("/user/:email", async (req, res) => {
+            const email = req.params.email
+            const user = req.body
+            const filter = { email: email }
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: user
+            }
+            const result = await userCollection.updateOne(filter, updateDoc, options)
+            res.send(result)
+
+        })
 
 
 
