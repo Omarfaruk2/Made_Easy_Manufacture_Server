@@ -89,7 +89,6 @@ async function run() {
         })
 
 
-
         // POst a single all orders order -----------------------------------------------------------------------
         app.post("/orders", async (req, res) => {
             const newOrder = req.body
@@ -122,6 +121,16 @@ async function run() {
             }
 
         })
+
+        // for paymet order
+
+        app.get("/myitems/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.findOne(query)
+            res.send(result)
+        })
+
 
         app.delete("/myitems/:id", async (req, res) => {
             const id = req.params.id
@@ -158,15 +167,6 @@ async function run() {
             const isAdmin = user.role === "admin"
             res.send(({ admin: isAdmin }))
         })
-
-
-
-
-
-
-
-
-
 
         // all user
         app.put("/user/:email", async (req, res) => {
