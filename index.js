@@ -44,6 +44,7 @@ async function run() {
         const reviewsCollection = client.db("MadeEasy").collection("reviews")
         const orderCollection = client.db("MadeEasy").collection("orders")
         const userCollection = client.db("MadeEasy").collection("users")
+        const updateUserCollection = client.db("MadeEasy").collection("updateUser")
         const paymentsCollection = client.db("MadeEasy").collection("payments")
 
         // item---------------------------------------------------------------------------------------------------------------------------
@@ -223,6 +224,32 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
+
+
+        // ------------------------------------------------------------------------------------------------------------------
+
+        // all user
+        app.put("/updateuser/:email", async (req, res) => {
+            const email = req.params.email
+            const user = req.body
+            const filter = { email: email }
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: user
+            }
+            const result = await updateUserCollection.updateOne(filter, updateDoc, options)
+            res.send(result)
+
+        })
+
+        // My items
+        app.get('/updateuser/:email', async (req, res) => {
+            const email = req.params.email
+            const query = { email: email }
+            const cursor = await updateUserCollection.find(query).toArray()
+            res.send(cursor)
+        })
+
 
 
 
