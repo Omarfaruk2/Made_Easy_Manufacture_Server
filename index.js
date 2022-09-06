@@ -65,14 +65,13 @@ async function run() {
 
         })
 
-        // post item
+        // post ite
 
         app.post("/items", async (req, res) => {
             const newitem = req.body
             const result = await productsCollection.insertOne(newitem)
             res.send(result)
         })
-
 
         // review-------------------------------------------------------------------------------------------------------------
         // Get All reviews
