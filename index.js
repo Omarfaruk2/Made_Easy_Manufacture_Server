@@ -148,11 +148,6 @@ async function run() {
         })
 
 
-
-
-
-
-
         // -----------------------------------------------------------------------------------------------------
 
 
@@ -272,12 +267,6 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
         })
-        // app.get("/user", verifyJWT, async (req, res) => {
-        //     const query = {}
-        //     const cursor = userCollection.find(query)
-        //     const result = await cursor.toArray()
-        //     res.send(result)
-        // })
 
         app.delete("/user/:id", async (req, res) => {
             const id = req.params.id
@@ -290,7 +279,7 @@ async function run() {
 
         // ------------------------------------------------------------------------------------------------------------------
 
-        // all user
+        // all user and xoss
         app.put("/updateuser/:email", async (req, res) => {
             const email = req.params.email
             const user = req.body
