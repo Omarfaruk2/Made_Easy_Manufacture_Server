@@ -53,7 +53,6 @@ async function run() {
             const cursor = productsCollection.find(query)
             const result = await cursor.toArray()
             res.send(result)
-
         })
 
         // Get Single Items
@@ -64,7 +63,6 @@ async function run() {
             res.send(result)
 
         })
-
         // post ite
 
         app.post("/items", async (req, res) => {
@@ -106,8 +104,50 @@ async function run() {
 
         })
 
-        // paynent
+        // get method
 
+        app.get("/orders/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.findOne(query)
+            res.send(result)
+
+        })
+
+        // role for shif order
+
+        app.patch("/orders/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id
+            const role = req.body
+            const filter = { _id: ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    role: role.role,
+                }
+            }
+            const updatedOrder = await orderCollection.updateOne(filter, updatedDoc)
+            // const result = await orderCollection.insertOne(role)
+            res.send(updatedDoc)
+
+        })
+
+        app.delete("/orders/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await orderCollection.deleteOne(query)
+            res.send(result)
+        })
+
+
+
+
+
+
+
+        // -----------------------------------------------------------------------------------------------------
+
+
+        // paynent
         app.post('/create-payment-intent', verifyJWT, async (req, res) => {
             const service = req.body
             const totalprice = service.totalprice
@@ -193,6 +233,7 @@ async function run() {
             }
         })
 
+
         app.get("/admin/:email", async (req, res) => {
             const email = req.params.email
             const user = await userCollection.findOne({ email: email })
@@ -216,12 +257,26 @@ async function run() {
 
         })
 
-        app.get("/user", verifyJWT, async (req, res) => {
+        app.get("/user", async (req, res) => {
             const query = {}
             const cursor = userCollection.find(query)
             const result = await cursor.toArray()
             res.send(result)
         })
+        // app.get("/user", verifyJWT, async (req, res) => {
+        //     const query = {}
+        //     const cursor = userCollection.find(query)
+        //     const result = await cursor.toArray()
+        //     res.send(result)
+        // })
+
+        app.delete("/user/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await userCollection.deleteOne(query)
+            res.send(result)
+        })
+
 
 
         // ------------------------------------------------------------------------------------------------------------------
@@ -246,7 +301,20 @@ async function run() {
             const query = { email: email }
             const cursor = await updateUserCollection.find(query).toArray()
             res.send(cursor)
+
+
+
+
+
+
         })
+
+
+
+
+
+
+
 
 
 
